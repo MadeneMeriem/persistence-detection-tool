@@ -1,0 +1,35 @@
+# ============================================================
+# POC: Backdoor systemd service — harmless sample
+# Copy to /etc/systemd/system/poc-backdoor.service to test.
+# Remove immediately after: sudo rm /etc/systemd/system/poc-backdoor.service
+# ============================================================
+
+[Unit]
+Description=System Update Helper
+# Attackers often use generic names like "System Update Helper",
+# "Network Manager Helper", "Bluetooth Agent" to blend in.
+After=network.target
+# 'always' restart policy ensures the process comes back if killed.
+Restart=always
+
+[Service]
+Type=simple
+
+# --- Technique 1: ExecStart from /tmp/ ---
+# Severity: HIGH
+# Legitimate services never execute binaries from /tmp/.
+# The binary path alone is the detection trigger — file doesn't exist.
+ExecStart=/tmp/poc_agent.sh
+
+# --- Technique 2: ExecStartPre from /dev/shm/ ---
+# Severity: HIGH
+# Pre-exec from RAM-backed tmpfs to run a staging command before the main payload.
+ExecStartPre=/dev/shm/.setup
+
+# --- Technique 3: nohup background execution ---
+# Severity: HIGH (systemd detector) / LOW (startup detector)
+# Daemonises a child process so it outlives systemd's supervision tree.
+ExecStartPost=nohup /var/tmp/.updater &
+
+[Install]
+WantedBy=multi-user.target

