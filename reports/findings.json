@@ -1,0 +1,10 @@
+[
+    {
+        "type": "cron",
+        "severity": "HIGH",
+        "file": "/etc/crontab",
+        "line": 23,
+        "content": "* * * * * /tmp/malware.sh",
+        "reason": "execution from /tmp/"
+    }
+]
